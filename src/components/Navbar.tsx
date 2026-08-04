@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Database, ExternalLink, Menu, X } from 'lucide-react'
+import { ExternalLink, Menu, X } from 'lucide-react'
 
 const LINKS = [
   { href: '#features', label: 'Features' },
@@ -26,9 +26,11 @@ export function Navbar() {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <a href="#" className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent">
-            <Database className="h-4.5 w-4.5" />
-          </span>
+          <img
+            src="./toketeo-logo.png"
+            alt="Toketeo"
+            className="h-9 w-9 rounded-lg object-contain"
+          />
           <span className="text-lg font-black tracking-tight">Toketeo</span>
         </a>
 

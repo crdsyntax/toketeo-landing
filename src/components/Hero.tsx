@@ -28,7 +28,13 @@ export function Hero() {
 
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-muted px-3.5 py-1 text-xs font-bold uppercase tracking-[0.22em] text-accent">
+          <img
+            src="./toketeo-logo.png"
+            alt="Toketeo"
+            className="mx-auto h-20 w-20 rounded-2xl object-contain sm:h-24 sm:w-24"
+          />
+
+          <span className="mt-5 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-muted px-3.5 py-1 text-xs font-bold uppercase tracking-[0.22em] text-accent">
             <span className="h-1.5 w-1.5 rounded-full bg-neon animate-pulse" />
             v0.3.8 · Desktop app
           </span>
