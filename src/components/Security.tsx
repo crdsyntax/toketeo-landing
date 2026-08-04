@@ -41,7 +41,7 @@ export function Security() {
         <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.2fr]">
           <div>
             <span className="text-xs font-bold uppercase tracking-[0.24em] text-accent">Security</span>
-            <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
               Your data stays{' '}
               <span className="text-gradient">yours</span>
             </h2>
@@ -71,7 +71,7 @@ export function Security() {
                   <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-muted text-accent">
                     <item.icon className="h-4.5 w-4.5" />
                   </span>
-                  <h3 className="font-bold">{item.title}</h3>
+                  <h3 className="font-bold text-foreground">{item.title}</h3>
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>
               </div>

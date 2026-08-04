@@ -75,7 +75,7 @@ export function Features() {
       <div className="mx-auto max-w-6xl px-5">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-bold uppercase tracking-[0.24em] text-accent">Features</span>
-          <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+          <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
             Everything you need to{' '}
             <span className="text-gradient">manage your data</span>
           </h2>
@@ -94,7 +94,7 @@ export function Features() {
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-muted text-accent transition-colors group-hover:bg-accent group-hover:text-white">
                 <feature.icon className="h-5.5 w-5.5" />
               </span>
-              <h3 className="mt-4 text-base font-bold">{feature.title}</h3>
+              <h3 className="mt-4 text-base font-bold text-foreground">{feature.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{feature.description}</p>
               {feature.tags && (
                 <div className="mt-4 flex flex-wrap gap-1.5">

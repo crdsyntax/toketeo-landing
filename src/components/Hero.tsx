@@ -33,7 +33,7 @@ export function Hero() {
             v0.3.8 · Desktop app
           </span>
 
-          <h1 className="mt-6 text-5xl font-black leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+          <h1 className="mt-6 text-5xl font-black leading-[1.05] tracking-tight text-foreground sm:text-6xl md:text-7xl">
             Every database.
             <br />
             <span className="text-gradient">One panel.</span>

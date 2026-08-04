@@ -25,7 +25,7 @@ export function Download() {
         <div className="overflow-hidden rounded-3xl border border-accent/30 bg-surface">
           <div className="bg-gradient-to-br from-accent/15 via-transparent to-transparent px-8 pt-10 pb-8 text-center">
             <span className="text-xs font-bold uppercase tracking-[0.24em] text-accent">Download</span>
-            <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+            <h2 className="mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
               Get Toketeo <span className="text-gradient">free</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted">
