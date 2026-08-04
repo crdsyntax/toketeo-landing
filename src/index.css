@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base: #0a0a0f;
+  --color-surface: #12121a;
+  --color-surface-hover: #181824;
+  --color-border: #262633;
+  --color-muted: #8b8ba3;
+  --color-foreground: #f4f4f7;
+  --color-accent: #8b5cf6;
+  --color-accent-hover: #7c3aed;
+  --color-accent-muted: rgba(139, 92, 246, 0.12);
+  --color-neon: #22d3ee;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-base text-foreground antialiased;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.35);
+}
+
+@utility text-gradient {
+  background: linear-gradient(120deg, #a78bfa 0%, #8b5cf6 45%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
