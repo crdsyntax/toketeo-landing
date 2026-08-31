@@ -8,6 +8,7 @@ import { Security } from './components/Security'
 import { Download } from './components/Download'
 import { Footer } from './components/Footer'
 import { CommandPaletteModal } from './components/CommandPaletteModal'
+import { StatusBar } from './components/StatusBar'
 
 export default function App() {
   const [cmdOpen, setCmdOpen] = useState(false)
@@ -24,7 +25,7 @@ export default function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-base text-foreground font-sans selection:bg-indigo-500/30 selection:text-white">
+    <div className="min-h-screen bg-page text-ink font-mono selection:bg-accent selection:text-page">
       <Navbar onOpenCommandPalette={() => setCmdOpen(true)} />
       <main>
         <Hero />
@@ -36,6 +37,7 @@ export default function App() {
       </main>
       <Footer />
       <CommandPaletteModal isOpen={cmdOpen} onClose={() => setCmdOpen(false)} />
+      <StatusBar />
     </div>
   )
 }

@@ -1,23 +1,21 @@
 import { useState, useEffect } from 'react'
-import { Search, X, Database, Terminal, Shield, Download, Sparkles, ArrowRight } from 'lucide-react'
+import { Search, X, ArrowRight } from 'lucide-react'
 
 interface CommandItem {
   id: string
   title: string
-  category: 'Engines' | 'Features' | 'Action' | 'AI'
+  category: string
   href: string
-  icon: any
 }
 
 const COMMANDS: CommandItem[] = [
-  { id: 'c1', title: 'Connect to PostgreSQL 16 Cluster', category: 'Engines', href: '#engines', icon: Database },
-  { id: 'c2', title: 'Open MySQL Query Editor', category: 'Engines', href: '#engines', icon: Terminal },
-  { id: 'c3', title: 'Inspect MongoDB Aggregation Pipeline', category: 'Engines', href: '#engines', icon: Database },
-  { id: 'c4', title: 'Scan Redis Keys & Monitor TTL', category: 'Engines', href: '#engines', icon: Database },
-  { id: 'c5', title: 'Generate Query with AI Copilot', category: 'AI', href: '#ai-assistant', icon: Sparkles },
-  { id: 'c6', title: 'Audit Database Roles & Security Vault', category: 'Features', href: '#security', icon: Shield },
-  { id: 'c7', title: 'Download Windows MSI Package', category: 'Action', href: '#download', icon: Download },
-  { id: 'c8', title: 'Download Linux DEB / AppImage', category: 'Action', href: '#download', icon: Download },
+  { id: 'c1', title: 'Connect to PostgreSQL', category: 'Engines', href: '#engines' },
+  { id: 'c2', title: 'Open the MySQL query editor', category: 'Engines', href: '#engines' },
+  { id: 'c3', title: 'Inspect MongoDB aggregation pipeline', category: 'Engines', href: '#engines' },
+  { id: 'c4', title: 'Scan Redis keys & monitor TTL', category: 'Engines', href: '#engines' },
+  { id: 'c5', title: 'Generate a query with AI', category: 'AI', href: '#ai' },
+  { id: 'c6', title: 'Security & vault overview', category: 'Security', href: '#security' },
+  { id: 'c7', title: 'Download Windows MSI', category: 'Action', href: '#download' },
 ]
 
 export function CommandPaletteModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -28,9 +26,6 @@ export function CommandPaletteModal({ isOpen, onClose }: { isOpen: boolean; onCl
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         if (isOpen) onClose()
-        else {
-          // Open handled by parent or state trigger
-        }
       }
       if (e.key === 'Escape' && isOpen) {
         onClose()
@@ -40,71 +35,68 @@ export function CommandPaletteModal({ isOpen, onClose }: { isOpen: boolean; onCl
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
+  useEffect(() => {
+    if (isOpen) setQuery('')
+  }, [isOpen])
+
   if (!isOpen) return null
 
   const filtered = COMMANDS.filter(
     (c) =>
       c.title.toLowerCase().includes(query.toLowerCase()) ||
-      c.category.toLowerCase().includes(query.toLowerCase())
+      c.category.toLowerCase().includes(query.toLowerCase()),
   )
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-xl rounded-2xl border border-indigo-500/30 bg-[#0d101a] shadow-2xl shadow-indigo-950/80 overflow-hidden animate-fadeIn">
-        <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3 bg-[#080a12]">
-          <Search className="h-4 w-4 text-indigo-400" />
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-page/70 p-4 pt-24">
+      <div className="w-full max-w-xl border border-line bg-panel shadow-2xl shadow-black/60">
+        <div className="flex items-center gap-3 border-b border-line px-4 py-3">
+          <Search className="h-4 w-4 text-accent" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type a command or database engine (e.g. Postgres, AI, Vault)..."
-            className="w-full bg-transparent text-sm text-white placeholder-slate-500 outline-none font-medium"
+            placeholder="Search engines, features, actions…"
+            className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-mute"
             autoFocus
           />
           <button
             onClick={onClose}
-            className="rounded p-1 text-slate-400 hover:text-white hover:bg-white/10"
+            className="border border-line p-1 text-mute hover:bg-accent hover:text-page"
+            aria-label="Close"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="max-h-80 overflow-y-auto p-2 divide-y divide-white/5">
+        <div className="max-h-80 overflow-y-auto divide-y divide-line">
           {filtered.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-500 font-mono">
-              No matching commands or query templates found.
+            <div className="p-8 text-center font-mono text-xs text-mute">
+              No matches.
             </div>
           ) : (
-            filtered.map((item) => {
-              const IconComp = item.icon
-              return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  onClick={onClose}
-                  className="flex items-center justify-between rounded-xl p-3 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                      <IconComp className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <p className="font-semibold text-white group-hover:text-cyan-300 transition-colors">
-                        {item.title}
-                      </p>
-                      <span className="text-[10px] font-mono text-slate-500">{item.category}</span>
-                    </div>
-                  </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-slate-500 group-hover:text-indigo-400 transition-colors" />
-                </a>
-              )
-            })
+            filtered.map((item) => (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={onClose}
+                className="flex items-center justify-between px-4 py-3 text-sm hover:bg-accent hover:text-page"
+              >
+                <span>
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-mute">
+                    {item.category} ·{' '}
+                  </span>
+                  {item.title}
+                </span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </a>
+            ))
           )}
         </div>
 
-        <div className="flex items-center justify-between border-t border-white/10 bg-[#080a12] px-4 py-2 text-[10px] font-mono text-slate-500">
-          <span>Navigate with search</span>
-          <span>Press <kbd className="rounded border border-white/10 px-1 bg-white/5">ESC</kbd> to exit</span>
+        <div className="flex items-center justify-between border-t border-line bg-surface px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-mute">
+          <span>Esc to close</span>
+          <span>⌘K toggles</span>
         </div>
       </div>
     </div>

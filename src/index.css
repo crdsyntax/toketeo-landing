@@ -1,20 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-base: #07080d;
-  --color-surface: #0e111a;
-  --color-surface-hover: #151a26;
-  --color-surface-active: #1c2333;
-  --color-border: #1e2536;
-  --color-border-glow: #313d59;
-  --color-muted: #94a3b8;
-  --color-foreground: #f8fafc;
-  --color-accent: #6366f1;
-  --color-accent-hover: #4f46e5;
-  --color-accent-muted: rgba(99, 102, 241, 0.15);
-  --color-neon: #38bdf8;
-  --color-purple: #a855f7;
-  --color-emerald: #34d399;
+  --font-mono: "Cascadia Code", "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace;
+
+  --color-page: #0a0a0f;
+  --color-panel: #131318;
+  --color-surface: #181920;
+  --color-hover: #1f212b;
+  --color-line: #2b2c38;
+  --color-ink: #e8e8ee;
+  --color-soft: #b6b7c2;
+  --color-mute: #8a8b96;
+  --color-accent: #4ade80;
+  --color-accent-2: #22c55e;
 }
 
 html {
@@ -23,69 +21,53 @@ html {
 }
 
 body {
-  @apply bg-base text-foreground antialiased selection:bg-accent/30 selection:text-white;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  @apply bg-page text-ink antialiased;
+  font-family: var(--font-mono);
+  font-feature-settings: "rv02", "cv02", "cv03", "cv04", "cv11";
 }
 
-@utility text-gradient {
-  background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 40%, #38bdf8 70%, #a855f7 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+::selection {
+  background: #4ade80;
+  color: #0a0a0f;
 }
 
-@utility text-gradient-cyan {
-  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+::-webkit-scrollbar-thumb {
+  background: #2b2c38;
+  border: 2px solid #0a0a0f;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3c4a;
 }
 
-@utility bg-grid {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-@utility bg-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-@utility glass-card {
-  background: rgba(14, 17, 26, 0.75);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-@utility glass-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  &:hover {
-    background: rgba(21, 26, 38, 0.85);
-    border-color: rgba(99, 102, 241, 0.35);
-    box-shadow: 0 0 25px rgba(99, 102, 241, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+@layer base {
+  a {
+    @apply text-ink underline;
+    text-decoration-color: rgba(138, 139, 150, 0.4);
+    transition: text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    text-decoration-color: #4ade80;
   }
 }
 
-@utility glow-box {
-  box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.25);
+@keyframes tm-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
-/* Custom scrollbar for query editor / tables */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.tm-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  background: #4ade80;
+  animation: tm-blink 1s step-end infinite;
 }
-::-webkit-scrollbar-track {
-  background: #090b12;
-}
-::-webkit-scrollbar-thumb {
-  background: #1e2536;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #313d59;
-}
-

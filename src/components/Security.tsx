@@ -1,125 +1,92 @@
-import { useState } from 'react'
-import {
-  Fingerprint,
-  KeyRound,
-  Lock,
-  ShieldCheck,
-  Wifi,
-  KeySquare,
-  EyeOff,
-} from 'lucide-react'
-
 const ITEMS = [
   {
-    icon: Lock,
     title: 'Master password vault',
-    description: 'Credentials are sealed with a master password and AES-256-GCM before ever touching disk.',
-    tag: 'AES-256-GCM',
+    fact: 'AES-256-GCM',
+    description:
+      'Credentials are sealed with a master password before ever touching disk.',
   },
   {
-    icon: Fingerprint,
-    title: 'Biometric Unlock',
-    description: 'Unlock your vault instantly using Windows Hello, Touch ID, or Linux secret service.',
-    tag: 'Windows Hello / TouchID',
+    title: 'Biometric unlock',
+    fact: 'Windows Hello',
+    description:
+      'Unlock the vault with biometrics or the OS keyring instead of retyping secrets.',
   },
   {
-    icon: KeySquare,
     title: 'Two-factor authentication',
-    description: 'Enforce a TOTP authenticator code as a second factor before unlocking sensitive connections.',
-    tag: 'TOTP 2FA',
+    fact: 'TOTP',
+    description:
+      'A TOTP code can be required before any connection unlocks.',
   },
   {
-    icon: ShieldCheck,
-    title: 'Recovery code sealed',
-    description: 'A one-time emergency recovery seed lets you regain connection parameters if lost.',
-    tag: 'Zero-Knowledge',
+    title: 'Recovery code',
+    fact: 'Zero-knowledge',
+    description:
+      'A one-time emergency seed lets you recover connection parameters if the password is lost.',
   },
   {
-    icon: KeyRound,
-    title: 'Native OS Keyring',
-    description: 'Master keys reside in your system credential store (Windows Credential Manager / Keychain).',
-    tag: 'OS Keyring',
+    title: 'Native OS keyring',
+    fact: 'Credential Manager / Keychain',
+    description:
+      'Master keys live in the OS credential store, not in the app directory.',
   },
   {
-    icon: Wifi,
-    title: 'Encrypted SSH Tunnels',
-    description: 'Reach isolated VPC databases behind firewalls through automated SSH tunneling.',
-    tag: 'SSH v2 Tunnel',
+    title: 'Encrypted SSH tunnels',
+    fact: 'SSH v2',
+    description:
+      'Reach databases inside private networks through automated SSH tunneling.',
   },
 ]
 
+const GUARANTEES = [
+  'Zero telemetry — connection metadata never leaves the machine.',
+  'Release binaries are signed with Ed25519 and verified on install.',
+  'No accounts, no cloud sync of your credentials, no tracking.',
+]
+
 export function Security() {
-  const [vaultLocked, setVaultLocked] = useState(false)
-
   return (
-    <section id="security" className="relative py-24 bg-[#07080d]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[420px] max-w-4xl rounded-full bg-indigo-500/10 blur-[130px]" />
-
-      <div className="relative mx-auto max-w-6xl px-5">
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.2fr]">
+    <section id="security" className="border-t border-line">
+      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+        <div className="mb-12 grid items-end gap-8 lg:grid-cols-[1.4fr_1fr]">
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-400 flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4" />
-              Security Architecture
-            </span>
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-white sm:text-5xl">
-              Your credentials stay <span className="text-gradient">100% private</span>
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-slate-300">
-              Toketeo treats every database connection string as a secret. Military-grade encryption, biometric unlock and zero remote telemetry mean your connection keys never leave your machine.
+            <p className="flex items-center gap-3 font-mono text-xs font-semibold uppercase tracking-widest text-mute">
+              <span className="font-mono text-xs font-bold text-accent">$ 05</span>
+              <span className="h-px flex-1 bg-line" />
+              Security
             </p>
-
-            {/* Interactive Vault Status Card */}
-            <div className="mt-8 rounded-2xl border border-white/10 bg-surface/90 p-5 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="flex items-center gap-2.5">
-                  <span className={`flex h-3 w-3 rounded-full ${vaultLocked ? 'bg-rose-500 shadow-[0_0_8px_#f43f5e]' : 'bg-emerald-400 shadow-[0_0_8px_#34d399]'}`} />
-                  <span className="text-xs font-mono font-bold text-white">
-                    VAULT STATE: {vaultLocked ? 'LOCKED (AES-256 SEALED)' : 'UNLOCKED (BIOMETRIC VERIFIED)'}
-                  </span>
-                </div>
-                <button
-                  onClick={() => setVaultLocked((v) => !v)}
-                  className="rounded bg-white/10 px-3 py-1 text-xs font-bold text-slate-200 hover:bg-white/20 transition-all"
-                >
-                  {vaultLocked ? 'Unlock Vault' : 'Test Lock Vault'}
-                </button>
-              </div>
-
-              <div className="mt-4 flex items-center gap-3 text-xs font-mono text-slate-300">
-                <EyeOff className="h-4 w-4 text-cyan-400 shrink-0" />
-                <span>
-                  Zero Telemetry guarantee: No connection metrics or database hostnames are ever transmitted to third-party servers.
-                </span>
-              </div>
-            </div>
+            <h2 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
+              Your credentials never leave the machine.
+            </h2>
           </div>
-
-          {/* Grid of Security Features */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {ITEMS.map((item) => (
-              <div
-                key={item.title}
-                className="group rounded-2xl border border-white/10 bg-surface/60 p-5 transition-all duration-300 hover:border-indigo-500/50 hover:bg-surface hover:shadow-lg hover:shadow-indigo-500/10"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/20 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                    <item.icon className="h-5 w-5" />
-                  </span>
-                  <span className="rounded bg-white/5 px-2 py-0.5 text-[10px] font-mono text-slate-400">
-                    {item.tag}
-                  </span>
-                </div>
-                <h3 className="mt-4 font-bold text-white group-hover:text-cyan-300 transition-colors">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-slate-400">{item.description}</p>
-              </div>
+          <ul className="space-y-2 font-mono text-xs text-soft">
+            {GUARANTEES.map((g) => (
+              <li key={g} className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                {g}
+              </li>
             ))}
-          </div>
+          </ul>
+        </div>
+
+        <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+          {ITEMS.map((item) => (
+            <div
+              key={item.title}
+              className="flex flex-col justify-between gap-4 bg-surface p-5"
+            >
+              <div>
+                <h3 className="text-lg font-bold text-ink">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-soft">
+                  {item.description}
+                </p>
+              </div>
+              <span className="self-start border border-line bg-panel px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent">
+                {item.fact}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   )
 }
-

@@ -1,23 +1,23 @@
 import { useState } from 'react'
-import { Sparkles, Bot, Code, Check } from 'lucide-react'
+import { Copy, Check } from 'lucide-react'
 
 interface PromptExample {
   title: string
   prompt: string
   generatedSql: string
-  explanation: string
+  note: string
   engine: string
 }
 
 const PROMPTS: PromptExample[] = [
   {
-    title: '📊 Customer LTV & Retention',
-    prompt: 'Show me total lifetime value and purchase count per customer for those active in the last 6 months.',
+    title: 'Customer lifetime value',
+    prompt: 'Show me lifetime value and purchase count per customer, active in the last 6 months.',
     engine: 'PostgreSQL 16',
-    generatedSql: `SELECT 
+    generatedSql: `SELECT
   c.id AS customer_id,
   c.email,
-  COUNT(o.id) AS total_orders,
+  COUNT(o.id)              AS total_orders,
   SUM(o.amount_cents) / 100.0 AS ltv_usd
 FROM customers c
 JOIN orders o ON o.customer_id = c.id
@@ -25,38 +25,37 @@ WHERE o.created_at >= NOW() - INTERVAL '6 months'
 GROUP BY c.id, c.email
 HAVING SUM(o.amount_cents) > 50000
 ORDER BY ltv_usd DESC;`,
-    explanation: 'Uses aggregate grouping with HAVING filter to highlight high-value retained customers.',
+    note: 'Aggregate with HAVING to surface high-value retained customers.',
   },
   {
-    title: '⚡ Slow Query Index Advice',
-    prompt: 'Find missing indexes on orders table causing high CPU during peak checkout hours.',
-    engine: 'MySQL 8.3',
-    generatedSql: `-- Recommended Composite Index Migration
-ALTER TABLE orders 
+    title: 'Missing index on checkout',
+    prompt: 'Find a missing index for the orders table causing high CPU at peak hours.',
+    engine: 'MySQL 8',
+    generatedSql: `-- Recommended composite index
+ALTER TABLE orders
   ADD INDEX idx_checkout_perf (created_at, status, customer_id),
   ALGORITHM=INPLACE, LOCK=NONE;`,
-    explanation: 'Suggests non-blocking inplace composite index to eliminate filesort on order lookups.',
+    note: 'Non-blocking inplace index to eliminate filesort on order lookups.',
   },
   {
-    title: '🔒 Security & Permission Audit',
-    prompt: 'Check which database users have administrative GRANT ALL privileges across schemas.',
+    title: 'Permission audit',
+    prompt: 'Which non-system users hold GRANT ALL privileges anywhere?',
     engine: 'PostgreSQL 16',
-    generatedSql: `SELECT 
-  grantee, table_schema, privilege_type 
-FROM information_schema.role_table_grants 
-WHERE privilege_type = 'ALL' 
+    generatedSql: `SELECT grantee, table_schema, privilege_type
+FROM information_schema.role_table_grants
+WHERE privilege_type = 'ALL'
   AND grantee NOT IN ('postgres', 'system');`,
-    explanation: 'Audits non-system roles with full schema control to enforce least privilege principles.',
+    note: 'Lists roles with full schema control, excluding system roles.',
   },
   {
-    title: '🧹 Redis Memory Cleanup Pipeline',
-    prompt: 'Identify expired key patterns consuming more than 50MB of RAM.',
-    engine: 'Redis 7.2',
-    generatedSql: `# Memory Diagnostic & Flush Commands
+    title: 'Redis memory cleanup',
+    prompt: 'Identify expired key patterns consuming more than 50 MB of RAM.',
+    engine: 'Redis 7',
+    generatedSql: `# Memory diagnostics
 MEMORY USAGE session:tokens:*
 MEMORY DOCTOR
 OBJECT ENCODING cache:temp:results`,
-    explanation: 'Scans Redis key encoding types and memory footprints to reclaim transient RAM.',
+    note: 'Scans encodings and memory footprints to reclaim transient RAM.',
   },
 ]
 
@@ -64,93 +63,85 @@ export function AiStudioSection() {
   const [selectedIdx, setSelectedIdx] = useState(0)
   const [copied, setCopied] = useState(false)
 
-  const activePrompt = PROMPTS[selectedIdx]
+  const active = PROMPTS[selectedIdx]
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(activePrompt.generatedSql)
+    navigator.clipboard.writeText(active.generatedSql)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
   }
 
   return (
-    <section id="ai-assistant" className="relative py-24 bg-[#07080d] overflow-hidden border-t border-white/5">
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-30" />
-      <div className="pointer-events-none absolute top-1/3 right-0 h-96 w-96 rounded-full bg-purple-600/15 blur-[160px]" />
-
-      <div className="relative mx-auto max-w-6xl px-5">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-purple-300">
-            <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-            AI Query Copilot
-          </span>
-          <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Query your database in <span className="text-gradient">plain language</span>
+    <section id="ai" className="border-t border-line">
+      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+        <div className="mb-12 max-w-2xl">
+          <p className="flex items-center gap-3 font-mono text-xs font-semibold uppercase tracking-widest text-mute">
+            <span className="font-mono text-xs font-bold text-accent">$ 04</span>
+            <span className="h-px flex-1 bg-line" />
+            AI assistance
+          </p>
+          <h2 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
+            Describe it. Get SQL.
           </h2>
-          <p className="mt-4 text-base text-slate-300">
-            Toketeo's built-in AI assistant interprets your schema, translates natural language into optimized query statements, and audits your database security — with zero data retention.
+          <p className="mt-4 text-soft">
+            Toketeo reads your schema and writes the query. The prompt context stays
+            local — your data is never sent anywhere.
           </p>
         </div>
 
-        {/* Interactive Prompt Simulator */}
-        <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_1.3fr] items-center">
-          {/* Left Prompt Selection */}
-          <div className="space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-2">
-              Select AI Copilot Scenario:
-            </span>
-            {PROMPTS.map((p, idx) => {
-              const isActive = selectedIdx === idx
-              return (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedIdx(idx)}
-                  className={`group cursor-pointer rounded-2xl border p-4 transition-all duration-300 ${
-                    isActive
-                      ? 'border-purple-500/60 bg-surface/90 shadow-xl shadow-purple-500/15 ring-1 ring-purple-500/30'
-                      : 'border-white/10 bg-surface/40 hover:border-white/20 hover:bg-surface/70'
+        <div className="grid gap-8 lg:grid-cols-[1fr_1.3fr]">
+          <div className="border border-line bg-panel">
+            <div className="border-b border-line bg-surface px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-widest text-accent">
+              Examples
+            </div>
+            {PROMPTS.map((p, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setSelectedIdx(idx)
+                  setCopied(false)
+                }}
+                className={`block w-full border-t border-line px-4 py-3 text-left first:border-t-0 ${
+                  selectedIdx === idx ? 'bg-accent text-page' : 'hover:bg-hover'
+                }`}
+              >
+                <span
+                  className={`font-mono text-xs uppercase tracking-wider ${
+                    selectedIdx === idx ? 'text-page/70' : 'text-accent'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-white group-hover:text-purple-300 transition-colors">
-                      {p.title}
-                    </h3>
-                    <span className="rounded bg-white/10 px-2 py-0.5 text-[10px] font-mono text-slate-300">
-                      {p.engine}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-xs text-slate-400 line-clamp-2">
-                    "{p.prompt}"
-                  </p>
-                </div>
-              )
-            })}
+                  {p.engine}
+                </span>
+                <span className={`mt-0.5 block font-bold ${selectedIdx === idx ? '' : 'text-ink'}`}>{p.title}</span>
+              </button>
+            ))}
           </div>
 
-          {/* Right Live Terminal Code Box */}
-          <div className="rounded-2xl border border-white/10 bg-[#0c0e17] p-5 shadow-2xl shadow-purple-950/40">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <Bot className="h-4 w-4 text-purple-400" />
-                <span className="text-xs font-bold text-white">
-                  AI Generator Output ({activePrompt.engine})
-                </span>
-              </div>
+          <div className="border border-line bg-panel">
+            <div className="flex items-center justify-between border-b border-line bg-surface px-4 py-2">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent">
+                {active.engine} — output
+              </span>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 rounded bg-white/10 px-2.5 py-1 text-xs font-medium text-slate-200 hover:bg-white/20"
+                className="flex items-center gap-1.5 border border-line px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-widest no-underline text-mute hover:bg-accent hover:text-page"
               >
-                {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Code className="h-3.5 w-3.5 text-purple-300" />}
-                {copied ? 'Copied' : 'Copy Query'}
+                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
 
-            <div className="mt-4 rounded-xl bg-black/80 p-4 font-mono text-xs text-emerald-300 border border-white/5 overflow-x-auto">
-              <pre>{activePrompt.generatedSql}</pre>
-            </div>
+            <p className="border-b border-line px-4 py-3 text-sm text-soft">
+              {active.prompt}
+            </p>
 
-            <div className="mt-4 rounded-xl bg-purple-950/20 border border-purple-500/20 p-3.5 text-xs text-slate-300">
-              <span className="font-bold text-purple-300 block mb-1">AI Reasoning & Optimization:</span>
-              <p>{activePrompt.explanation}</p>
+            <pre className="overflow-x-auto border-t border-line bg-[#0b0c11] px-4 py-4 font-mono text-xs leading-relaxed text-soft">
+              {active.generatedSql}
+            </pre>
+
+            <div className="px-4 py-3 font-mono text-xs text-mute">
+              <span className="font-bold uppercase tracking-widest text-accent">Note · </span>
+              {active.note}
             </div>
           </div>
         </div>

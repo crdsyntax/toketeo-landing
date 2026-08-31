@@ -1,85 +1,110 @@
-import { ArrowUp, ShieldCheck } from 'lucide-react'
+import { ArrowUp } from 'lucide-react'
+
+const ENGINE_LINKS = [
+  { href: '#engines', label: 'PostgreSQL' },
+  { href: '#engines', label: 'MySQL & MariaDB' },
+  { href: '#engines', label: 'MongoDB' },
+  { href: '#engines', label: 'Redis' },
+  { href: '#engines', label: 'SQLite' },
+  { href: '#engines', label: 'SQL Server' },
+]
+
+const PRODUCT_LINKS = [
+  { href: '#features', label: 'Features' },
+  { href: '#ai', label: 'AI assistance' },
+  { href: '#security', label: 'Security' },
+  { href: '#download', label: 'Downloads' },
+  { href: 'https://github.com/crdsyntax/toketeo', label: 'GitHub', external: true },
+]
 
 export function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   return (
-    <footer className="border-t border-white/10 bg-[#05060a] py-14 relative text-slate-400 text-xs">
-      <div className="mx-auto max-w-6xl px-5">
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4 pb-10 border-b border-white/10">
-          {/* Brand col */}
-          <div className="space-y-3 md:col-span-1">
-            <div className="flex items-center gap-2.5">
+    <footer className="border-t border-line bg-panel text-mute">
+      <div className="mx-auto max-w-6xl px-5 py-14">
+        <div className="grid gap-10 pb-10 sm:grid-cols-2 md:grid-cols-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2.5 text-ink">
               <img
-                src="./toketeo-logo.png"
+                src="./logotipo.png"
                 alt="Toketeo"
-                className="h-8 w-8 rounded-lg object-contain bg-surface border border-white/10 p-1"
+                className="h-8 w-auto object-contain"
               />
-              <span className="text-base font-black tracking-tight text-white">Toketeo</span>
+              <span className="text-base font-black tracking-tight">Toketeo</span>
             </div>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              The modern open-source database client & administration panel built for speed, security and multi-engine flexibility.
+            <p className="text-xs leading-relaxed">
+              Open-source desktop client and administration panel for relational,
+              document, embedded and in-memory databases.
             </p>
-            <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-400">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Update Servers Operational</span>
-            </div>
           </div>
 
-          {/* Engines col */}
           <div>
-            <h4 className="font-bold text-white text-xs uppercase tracking-wider mb-3">Supported Engines</h4>
-            <ul className="space-y-2 text-slate-400">
-              <li><a href="#engines" className="hover:text-white transition-colors">PostgreSQL Client</a></li>
-              <li><a href="#engines" className="hover:text-white transition-colors">MySQL & MariaDB Admin</a></li>
-              <li><a href="#engines" className="hover:text-white transition-colors">MongoDB Aggregator</a></li>
-              <li><a href="#engines" className="hover:text-white transition-colors">Redis Cache Explorer</a></li>
-              <li><a href="#engines" className="hover:text-white transition-colors">SQLite Local Inspector</a></li>
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-accent">
+              Engines
+            </h4>
+            <ul className="mt-3 space-y-2 text-xs">
+              {ENGINE_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href} className="text-mute no-underline hover:text-accent">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Navigation col */}
           <div>
-            <h4 className="font-bold text-white text-xs uppercase tracking-wider mb-3">Product</h4>
-            <ul className="space-y-2 text-slate-400">
-              <li><a href="#features" className="hover:text-white transition-colors">Feature Capabilities</a></li>
-              <li><a href="#ai-assistant" className="hover:text-white transition-colors">AI Query Copilot</a></li>
-              <li><a href="#security" className="hover:text-white transition-colors">Security Architecture</a></li>
-              <li><a href="#download" className="hover:text-white transition-colors">Download Windows & Linux</a></li>
-              <li><a href="https://github.com/crdsyntax/toketeo" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub Repository</a></li>
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-accent">
+              Product
+            </h4>
+            <ul className="mt-3 space-y-2 text-xs">
+              {PRODUCT_LINKS.map((link) => (
+                <li key={link.label}>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-mute no-underline hover:text-accent"
+                    >
+                      {link.label} ↗
+                    </a>
+                  ) : (
+                    <a href={link.href} className="text-mute no-underline hover:text-accent">
+                      {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Vault & Legal */}
           <div>
-            <h4 className="font-bold text-white text-xs uppercase tracking-wider mb-3">Security & Trust</h4>
-            <p className="text-xs text-slate-400 leading-relaxed mb-3">
-              100% Zero-Telemetry. Master keys sealed using AES-256-GCM.
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-accent">
+              Security
+            </h4>
+            <p className="mt-3 text-xs leading-relaxed">
+              Zero telemetry. Credentials sealed with AES-256-GCM. Releases signed
+              with Ed25519 and verified on install.
             </p>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 text-[11px] font-mono text-indigo-300">
-              <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
-              Verified Ed25519 Signatures
-            </span>
+            <p className="mt-3 font-mono text-[11px] uppercase tracking-widest text-mute">
+              Windows x64
+            </p>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-slate-400 text-xs">
-            © {new Date().getFullYear()} Toketeo. Open source database administration panel.
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-line pt-6 sm:flex-row">
+          <p className="font-mono text-[11px]">
+            © {new Date().getFullYear()} Toketeo — open source
           </p>
-
           <button
-            onClick={scrollToTop}
-            className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-surface/80 px-3 py-1.5 text-xs text-slate-300 hover:border-white/20 hover:text-white hover:bg-white/5 transition-all"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center gap-2 border border-line px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-mute no-underline hover:border-accent hover:text-accent"
           >
-            <span>Back to top</span>
-            <ArrowUp className="h-3.5 w-3.5 text-indigo-400" />
+            <ArrowUp className="h-3.5 w-3.5" />
+            Back to top
           </button>
         </div>
       </div>
     </footer>
   )
 }
-
